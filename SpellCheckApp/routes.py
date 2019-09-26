@@ -1,8 +1,6 @@
-from flask import Flask
+from SpellCheckApp import app
 from flask import session, render_template, request, flash
-import os
 
-app = Flask(__name__)
 
 """     
         1.User registration: /your/webroot/register
@@ -24,23 +22,11 @@ def root():
 
 @app.route('/register', methods=['POST'])
 def create_user():
-    return root()
+    return render_template('register.html')
 
 
 @app.route('/login', methods=['POST'])
 def do_login():
-    admin_request = False
-
-    if request.form['username'] == 'admin':
-        admin_request = True
-    if request.form['password'] == 'password' and request.form['username'] == 'username':
-        session['logged_in'] = True
-        if admin_request:
-            session['is_admin'] = True
-    else:
-        flash('username does not exist or supplied password incorrect for this user')
-    return root()
+    return render_template('login.html')
 
 
-if __name__ == '__main__':
-    app.secret_key = os.urandom(12)
