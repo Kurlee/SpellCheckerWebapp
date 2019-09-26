@@ -16,9 +16,8 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/index')
 def root():
-    user = {'username', 'Adrian'}       # user for testing, remove
     if not session.get('logged_in'):
-        return render_template('login.html')
+        return render_template('register.html')
     else:
         return "hello <name>"
 
@@ -45,4 +44,3 @@ def do_login():
 
 if __name__ == '__main__':
     app.secret_key = os.urandom(12)
-    app.run(debug=True, host='0.0.0.0', port=4000)

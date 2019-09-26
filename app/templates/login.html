@@ -1,0 +1,28 @@
+{%  extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block body %}
+    <h1 class="text-center">A Spell Checker</h1>
+    <div class="col-sm-6 offset-sm-3">
+        <div class="jumbotron">
+            Please enter credentials
+        </div>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(size=32) }}
+        </p>
+        <p>
+            {{ form.password.label }}<br>
+            {{ form.password(size=32) }}
+        </p>
+        <p>
+            {{ form.remember_me() }}<br>
+            {{ form.remembe_me.label }}
+        </p>
+        <p>
+            {{ form.submit() }}
+        </p>
+    </form>
+    </div>
+{% endblock %}
