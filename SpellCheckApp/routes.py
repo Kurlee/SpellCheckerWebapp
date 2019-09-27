@@ -1,5 +1,6 @@
-from SpellCheckApp import app
-from flask import session, render_template, request, flash
+from SpellCheckApp import forms
+from flask import current_app, Blueprint, render_template, flash, redirect, url_for, session
+app = Blueprint('app', __name__, url_prefix='/')
 
 
 """     
@@ -20,13 +21,17 @@ def root():
         return "hello <name>"
 
 
-@app.route('/register', methods=['POST'])
+@app.route('/register', methods=['GET', 'POST'])
 def create_user():
     return render_template('register.html')
 
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def do_login():
-    return render_template('login.html')
+    form = forms.LoginForm()
+    if form.validate_on_submit():
+        flash('Login requested for user {}, remember_me={}' .format(form.username.data, form.remember_me.data))
+        return redirect(url_for('index'))
+    return render_template('login.html', titile='Sign in', form=form)
 
 
