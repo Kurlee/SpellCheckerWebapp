@@ -12,12 +12,12 @@
         <h5 class="my-0 mr-md-auto font-weight-normal">A Spell Checker</h5>
         <nav class="my-2 my-md-0 mr-md-3">
             <a class="p-2 text-dark" href="/" title="Home">Home</a>
-            {%  if not g.user %}
-            <a class="p-2 text-dark" href="/login" title="Login/Register">Log In / Register</a>
+            {% if current_user.is_anonymous %}
+                <a class="p-2 text-dark" href="{{ url_for('login') }}" title="Login/Register">Log In / Register</a>
             {% else %}
-            <a class="p-2 text-dark" href="/submit" title="Submit">Text Submission</a>
-            <a class="p-2 text-dark" href="/results" title="Results">Results</a>
-            <a class="p-2 text-dark" href="/logout" title="Logout">Logout</a>
+                <a class="p-2 text-dark" href="{{ url_for('submit') }}" title="Submit">Text Submission</a>
+                <a class="p-2 text-dark" href="{{ url_for("results") }}" title="Results">Results</a>
+                <a class="p-2 text-dark" href="{{ url_for('logout') }}" title="Logout">Logout</a>
             {% endif %}
         </nav>
     </div>
