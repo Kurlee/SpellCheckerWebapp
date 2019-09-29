@@ -3,10 +3,10 @@ from config import config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
-from . import routes
 
 db = SQLAlchemy()
 migrate = Migrate()
+login = LoginManager()
 
 
 def create_app(config_name):
@@ -18,8 +18,8 @@ def create_app(config_name):
     """Initialize plugins"""
     db.init_app(app)
     migrate.init_app(app, db)
-    login = LoginManager(app)
-    login.login_view = 'login'
+    login.init_app(app)
+    login.login_view = 'sc.login'
 
     """Set the context of the application and set routes"""
     with app.app_context():
@@ -30,4 +30,3 @@ def create_app(config_name):
         return app
 
 
-import SpellCheckApp.routes

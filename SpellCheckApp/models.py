@@ -1,7 +1,8 @@
 from sqlalchemy import Column
-from werkzeug.security import generate_password_hash, check_password_hash, gen_salt
+from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from SpellCheckApp import db, login
+from SpellCheckApp import db
+from SpellCheckApp import login
 from flask_login import UserMixin
 
 
