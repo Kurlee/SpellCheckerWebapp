@@ -1,7 +1,4 @@
-from SpellCheckApp import create_app
-
-
-app = create_app('development')
+from SpellCheckApp import app
 
 
 if __name__ == "__main__":

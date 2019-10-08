@@ -1,32 +1,23 @@
 from flask import Flask
-from config import config
+from config import DevelopmentConfig
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 
-db = SQLAlchemy()
-migrate = Migrate()
-login = LoginManager()
 
 
-def create_app(config_name):
-    """initialize the application"""
-    app = Flask(__name__)
-    app.config.from_object(config[config_name])
-    config[config_name].init_app(app)
+"""initialize the application"""
+app = Flask(__name__)
+app.config.from_object(DevelopmentConfig())
 
-    """Initialize plugins"""
-    db.init_app(app)
-    migrate.init_app(app, db)
-    login.init_app(app)
-    login.login_view = 'sc.login'
+"""Initialize plugins"""
+db = SQLAlchemy(app)
+migrage = Migrate(app, db)
+login = LoginManager(app)
+login.login_view = 'login'
+from SpellCheckApp import routes, models
 
-    """Set the context of the application and set routes"""
-    with app.app_context():
-        from . import routes, models
-        db.create_all()
-        db.session.commit()
-        app.register_blueprint(routes.sc)
-        return app
+db.create_all()
+db.session.commit()
 
 

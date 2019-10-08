@@ -7,7 +7,7 @@
             Please register for an account
         </div>
     <div class="col-sm-6 offset-sm-3">
-        Already a user? <a href="{{ url_for('sc.login') }}">Click to Login!</a>
+        Already a user? <a href="{{ url_for('login') }}">Click to Login!</a>
     </div>
     </div>
     <form action="" method="post">
@@ -19,13 +19,6 @@
         {% endfor %}
     </p>
     <p>
-        {{ form.email.label }}<br>
-        {{ form.email(size=64) }}<br>
-        {% for error in form.email.errors %}
-            <span style="color: red;">[{{ error }}]</span>
-        {% endfor %}
-    </p>
-    <p>
         {{ form.password.label }}<br>
         {{ form.password(size=32) }}<br>
         {% for error in form.password.errors %}
@@ -33,9 +26,9 @@
         {% endfor %}
     </p>
     <p>
-        {{ form.password2.label }}<br>
-        {{ form.password2(size=32) }}<br>
-        {% for error in form.password2.errors %}
+        {{ form.two_fa.label }}<br>
+        {{ form.two_fa(size=32) }}<br>
+        {% for error in form.two_fa.errors %}
             <span style="color: red;">[{{ error }}]</span>
         {% endfor %}
     </p>

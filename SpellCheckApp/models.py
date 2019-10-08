@@ -4,12 +4,12 @@ from datetime import datetime
 from SpellCheckApp import db
 from SpellCheckApp import login
 from flask_login import UserMixin
+from subprocess import check_output
 
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username: Column = db.Column(db.String(64), index=True, unique=True)
-    email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     post = db.relationship('Post', backref='author', lazy='dynamic')
 
@@ -28,9 +28,19 @@ class Post(db.Model):
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    result = db.Column(db.Text)
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
+
+    def set_result(self, body):
+        self.result = check_output('a.out %s', body)
+
+    def get_result(self):
+        return self.result
+
+
+
 
 
 @login.user_loader

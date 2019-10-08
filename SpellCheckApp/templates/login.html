@@ -6,7 +6,7 @@
         <div class="jumbotron">
             Please enter credentials
         </div>
-        <p>New User?<a href=""{{ url_for('sc.register') }}>Click to Register!</a></p>
+        <p>New User?<a href="{{ url_for('register') }}">Click to Register!</a></p>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
@@ -24,8 +24,11 @@
             {% endfor %}
         </p>
         <p>
-            {{ form.remember_me() }}<br>
-            {{ form.remember_me.label }}
+            {{ form.two_fa.label }}<br>
+            {{ form.two_fa(size=14) }}
+            {% for error in form.two_fa.errors %}
+                <span style="color: red;">*{{ error }}</span>
+            {% endfor %}
         </p>
         <p>
             {{ form.submit() }}
