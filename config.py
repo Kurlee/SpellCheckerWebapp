@@ -8,6 +8,7 @@ class Config(object):
     APP_DIR = os.path.abspath(os.path.realpath(__file__))
     TEMPLATES_DIR = os.path.join(APP_DIR, 'templates')
     STATIC_DIR = os.path.join(APP_DIR, 'static')
+    UPLOADS_DIR = os.path.join(STATIC_DIR, 'uploads')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     @staticmethod

@@ -5,12 +5,15 @@ from SpellCheckApp import db
 from SpellCheckApp import login
 from flask_login import UserMixin
 from subprocess import check_output
+from hashlib import sha256
+import os
 
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username: Column = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    two_fa = db.Column(db.String(14))
     post = db.relationship('Post', backref='author', lazy='dynamic')
 
     def __repr__(self):
@@ -34,13 +37,15 @@ class Post(db.Model):
         return '<Post {}>'.format(self.body)
 
     def set_result(self, body):
-        self.result = check_output('a.out %s', body)
+        # get hash of the post for file name
+        filename = sha256(body)
 
-    def get_result(self):
-        return self.result
+        # save the post to a file in order to pass to spell checker
+        f = open(os.path.join(os.environ.get('UPLOADS_DIR'), filename, "w+"))
+        f.write(body)
+        f.close()
 
-
-
+        self.result = check_output('a.out dictionary_file -c %s', filename)
 
 
 @login.user_loader
