@@ -12,7 +12,7 @@ app.config.from_object(DevelopmentConfig())
 
 """Initialize plugins"""
 db = SQLAlchemy(app)
-migrage = Migrate(app, db)
+migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
 from SpellCheckApp import routes, models

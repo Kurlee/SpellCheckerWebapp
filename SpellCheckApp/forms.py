@@ -51,11 +51,6 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Username is already in use')
 
-    def validate_email(self, email):
-        user = User.query.filter_by(email=email.data).first()
-        if user is not None:
-            raise ValidationError('A user already exists for this email, did you forget your password?')
-
 
 class SubmissionForm(FlaskForm):
     inputtext = StringField('CheckText', id='inputtext', validators=[DataRequired()])

@@ -13,7 +13,7 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username: Column = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    two_fa = db.Column(db.String(14))
+    two_fa: Column = db.Column(db.String(14))
     post = db.relationship('Post', backref='author', lazy='dynamic')
 
     def __repr__(self):
