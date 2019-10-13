@@ -5,7 +5,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'averysecretkey'
-    APP_DIR = os.path.abspath(os.path.realpath(__file__))
+    APP_DIR = os.path.join(basedir, "SpellCheckApp")
     TEMPLATES_DIR = os.path.join(APP_DIR, 'templates')
     STATIC_DIR = os.path.join(APP_DIR, 'static')
     UPLOADS_DIR = os.path.join(STATIC_DIR, 'uploads')

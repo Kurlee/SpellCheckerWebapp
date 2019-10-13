@@ -1,13 +1,11 @@
 from sqlalchemy import Column
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from SpellCheckApp import db
-from SpellCheckApp import login
+from SpellCheckApp import db, login, DevelopmentConfig
 from flask_login import UserMixin
 from subprocess import check_output
 from hashlib import sha256
 import os
-
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -38,16 +36,32 @@ class Post(db.Model):
 
     def set_result(self, body):
         # get hash of the post for file name
-        filename = sha256(body)
+        hash_object = sha256(body.encode('utf-8'))
+        filename = hash_object.hexdigest()
+        file_path = os.path.join(DevelopmentConfig.UPLOADS_DIR, filename)
 
         # save the post to a file in order to pass to spell checker
-        f = open(os.path.join(os.environ.get('UPLOADS_DIR'), filename, "w+"))
+        f = open(file_path, "w+")
         f.write(body)
         f.close()
 
-        self.result = check_output('a.out dictionary_file -c %s', filename)
+        """     Example Command
+        /home/admin/PycharmProjects/untitled/SpellCheckApp/static/a.out 
+        /home/admin/PycharmProjects/untitled/SpellCheckApp/static/dictionary_file 
+        -c /home/admin/PycharmProjects/untitled/SpellCheckApp/static/uploads/filename
+        """
+        command = (
+            "." + DevelopmentConfig.STATIC_DIR + "a.out" +
+            DevelopmentConfig.STATIC_DIR + "dictionary_file" +
+            "-c " + DevelopmentConfig.UPLOADS_DIR + filename
+        )
+        print(command)
+
+        result = check_output(command, shell=True)
+        print(result)
+        #self.result = check_output('a.out dictionary_file -c %s', filename)
 
 
 @login.user_loader
 def load_user(id):
-    return User.query.ger(int(id))
+    return User.query.get(int(id))

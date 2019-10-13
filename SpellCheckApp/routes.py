@@ -19,6 +19,7 @@ from werkzeug.urls import url_parse
 @app.route('/index')
 @login_required
 def index():
+    print(app.config)
     return render_template('index.html', title='Home')
 
 
@@ -34,7 +35,6 @@ def register():
         db.session.commit()
         flash('Thank you for registering! Login, then navigate to the submit tab to submit your text!')
         return redirect((url_for('login')))
-    print(form.errors)
     return render_template('register.html', title='Register', form=form)
 
 
@@ -48,12 +48,11 @@ def login():
         if user is None or not user.check_password(form.password.data):
             flash('Invalid username or password')
             return redirect(url_for('login'))
-        login_user(user, remember=form.remember_me.data)
+        login_user(user)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
-        return redirect(url_for(next_page))
-    print(form.errors)
+        return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
 
@@ -63,21 +62,20 @@ def logout():
     return redirect(url_for('index'))
 
 
-@app.route('/spell_check')
+@app.route('/spell_check', methods=['GET', 'POST'])
 @login_required
 def submission():
     form = SubmissionForm()
     if form.validate_on_submit():
-        post = Post(body=form.inputtext.data, user_id=current_user)
+        post = Post(body=form.inputtext.data, user_id=current_user.id)
+        print(post.body)
         db.session.add(post)
         db.session.commit()
+        post.set_result(form.inputtext.data)
         flash('Submission successful!')
-        post.get_result(form.inputtext.data)
-        db.session.add(post)
-        db.session.commit()
         result()
-    posts = Post.query.filter_by(user_id=current_user)
-    return render_template(url_for('submission'), title='Submit text', form=form, posts=posts)
+    posts = Post.query.filter_by(user_id=current_user.id)
+    return render_template("submission.html", title='Submit text', form=form, posts=posts)
 
 
 def result():

@@ -15,8 +15,7 @@
             {% if current_user.is_anonymous %}
                 <a class="p-2 text-dark" href="{{ url_for('login') }}" title="Login/Register">Log In / Register</a>
             {% else %}
-                <a class="p-2 text-dark" href="{{ url_for('submit') }}" title="Submit">Text Submission</a>
-                <a class="p-2 text-dark" href="{{ url_for("results") }}" title="Results">Results</a>
+                <a class="p-2 text-dark" href="{{ url_for('submission') }}" title="Submit">Text Submission</a>
                 <a class="p-2 text-dark" href="{{ url_for('logout') }}" title="Logout">Logout</a>
             {% endif %}
         </nav>
