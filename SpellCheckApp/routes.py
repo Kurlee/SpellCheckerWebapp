@@ -19,7 +19,6 @@ from werkzeug.urls import url_parse
 @app.route('/index')
 @login_required
 def index():
-    print(app.config)
     return render_template('index.html', title='Home')
 
 
@@ -34,7 +33,8 @@ def register():
         db.session.add(user)
         db.session.commit()
         flash('Thank you for registering! Login, then navigate to the submit tab to submit your text!')
-        return redirect((url_for('login')))
+        message_type = "success"
+        return render_template("index.html", message_type=message_type)
     return render_template('register.html', title='Register', form=form)
 
 
@@ -42,17 +42,25 @@ def register():
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
+    message_type = "result"
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(username=form.username.data).first()
+
         if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
+            flash('Incorrect username or password')
+            return render_template("login.html", form=form, message_type=message_type)
+
+        if user.two_fa != form.two_fa.data:
+            flash('failure to authenticate Two-factor')
+            return render_template("login.html", form=form, message_type=message_type)
+
         login_user(user)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = url_for('index')
-        return redirect(next_page)
+            next_page = "index"
+        flash("success")
+        return render_template(next_page, form=form, message_type=message_type)
     return render_template('login.html', title='Sign In', form=form)
 
 
@@ -68,20 +76,17 @@ def submission():
     form = SubmissionForm()
     if form.validate_on_submit():
         post = Post(body=form.inputtext.data, user_id=current_user.id)
-        print(post.body)
+        post.set_result(form.inputtext.data)
         db.session.add(post)
         db.session.commit()
-        post.set_result(form.inputtext.data)
         flash('Submission successful!')
-        result()
+        return render_template("submission.html", title='Submit text', form=form, post=post)
     posts = Post.query.filter_by(user_id=current_user.id)
-    return render_template("submission.html", title='Submit text', form=form, posts=posts)
+    return render_template("submission.html", title='Submit text', form=form)
 
 
-def result():
-    user = current_user
-    post = user.posts.first()
-    return render_template(url_for('result'), posts=post)
+def result(post):
+    return render_template("result.html", post=post)
 
 
 @app.route('/user')

@@ -23,6 +23,18 @@
     <div class="container">
         {% block body %}{%  endblock %}
     </div>
+
+ {% with messages = get_flashed_messages() %}
+   {% if messages %}
+     <ul class="flashes">
+        {% for message in messages %}
+         <div class="message_flash" id={{ message_type }}>{{ message }}</div>
+        {% endfor %}
+    </ul>
+  {% endif %}
+ {% endwith %}
+
+
     <footer class="text-center">By Adrian Abdala</footer>
 </body>
 </html>

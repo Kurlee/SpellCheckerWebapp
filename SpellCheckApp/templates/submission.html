@@ -3,8 +3,10 @@
 {% block body %}
     <h1 class="text-center">A Spell Checker</h1>
     <h2>Hi, {{ current_user.username }}!</h2>
-    <div class="jumbotron">
-    </div>
+
+
+
+
     <form action="" method="post">
         {{ form.hidden_tag() }}
     <p>
@@ -16,4 +18,21 @@
     </p>
     <p>{{ form.submit() }}</p>
     </form>
+
+
+
+
+    {% if post is defined %}
+    <p>
+        <h4>Submitted Text</h4>
+        <div id="textout">
+            {{ post.body }}<br>
+        </div>
+
+        <h4>Results</h4>
+        <div id="misspelled">
+            <b>{{ post.result }}</b><br>
+        </div>
+    </p>
+    {% endif %}
 {% endblock %}

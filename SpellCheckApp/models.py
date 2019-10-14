@@ -50,16 +50,13 @@ class Post(db.Model):
         /home/admin/PycharmProjects/untitled/SpellCheckApp/static/dictionary_file 
         -c /home/admin/PycharmProjects/untitled/SpellCheckApp/static/uploads/filename
         """
-        command = (
-            "." + DevelopmentConfig.STATIC_DIR + "a.out" +
-            DevelopmentConfig.STATIC_DIR + "dictionary_file" +
-            "-c " + DevelopmentConfig.UPLOADS_DIR + filename
-        )
-        print(command)
-
-        result = check_output(command, shell=True)
-        print(result)
-        #self.result = check_output('a.out dictionary_file -c %s', filename)
+        result = check_output([DevelopmentConfig.STATIC_DIR + "/a.out",
+                               DevelopmentConfig.STATIC_DIR + "/dictionary_file",
+                               "-c",
+                               DevelopmentConfig.UPLOADS_DIR + "/" + filename
+                               ])
+        print(result.decode("utf-8"))
+        self.result = result.decode("utf-8")
 
 
 @login.user_loader
