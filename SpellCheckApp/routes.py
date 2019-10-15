@@ -36,7 +36,7 @@ def register():
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash(u'Thank you for registering! Login, then navigate to the submit tab to submit your text!', 'success')
+        flash(u'success', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
