@@ -23,14 +23,14 @@ def validate_phone(form, field):
         raise ValidationError('Failure: This is an invalid phone number, too many characters')
     else:
         sanitized_phone_number = field.data.strip(' ()-')
-        if len(sanitized_phone_number) == 10:
+        if len(sanitized_phone_number) == 10 or len(sanitized_phone_number) == 11:
             for i in range(len(sanitized_phone_number)):
                 if sanitized_phone_number[i].isnumeric():
                     continue
                 else:
                     raise ValidationError('Failure: Phone numbers must only contain numbers')
         else:
-            raise ValidationError('Failure: Phone numbers must contain 10 digits')
+            raise ValidationError('Failure: Phone numbers must contain 10 digits (or 11 with country code)')
 
 
 class LoginForm(FlaskForm):
