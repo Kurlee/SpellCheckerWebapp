@@ -1,5 +1,5 @@
 from flask import Flask
-from config import ProductionConfig
+from config import DevelopmentConfig
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
@@ -8,7 +8,7 @@ from flask_login import LoginManager
 
 """initialize the application"""
 app = Flask(__name__)
-app.config.from_object(ProductionConfig())
+app.config.from_object(DevelopmentConfig())
 
 
 """Initialize plugins"""

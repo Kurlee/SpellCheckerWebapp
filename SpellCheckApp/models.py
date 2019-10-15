@@ -1,7 +1,7 @@
 from sqlalchemy import Column
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from SpellCheckApp import db, login, ProductionConfig
+from SpellCheckApp import db, login, DevelopmentConfig
 from flask_login import UserMixin
 from subprocess import check_output
 from hashlib import sha256
@@ -39,7 +39,7 @@ class Post(db.Model):
         # get hash of the post for file name
         hash_object = sha256(self.body.encode('utf-8'))
         filename = hash_object.hexdigest()
-        file_path = os.path.join(ProductionConfig.UPLOADS_DIR, filename)
+        file_path = os.path.join(DevelopmentConfig.UPLOADS_DIR, filename)
 
         # save the post to a file in order to pass to spell checker
         f = open(file_path, "w+")
@@ -49,9 +49,9 @@ class Post(db.Model):
         """     Example Command
         Usage: ./program to_check.txt wordlist.txt
         """
-        result = check_output([ProductionConfig.STATIC_DIR + "/a.out",
-                               ProductionConfig.UPLOADS_DIR + "/" + filename,
-                               ProductionConfig.STATIC_DIR + "/dictionary_file"
+        result = check_output([DevelopmentConfig.STATIC_DIR + "/a.out",
+                               DevelopmentConfig.UPLOADS_DIR + "/" + filename,
+                               DevelopmentConfig.STATIC_DIR + "/dictionary_file"
                                ])
         print(result.decode("utf-8"))
         self.result = result.decode("utf-8")
