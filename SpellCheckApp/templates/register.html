@@ -16,21 +16,21 @@
         {{ form.username.label }}<br>
         {{ form.username(size=32) }}<br>
         {% for error in form.username.errors %}
-        <span style="color: red;">[{{ error }}]</span>
+        <span id="success" style="color: red;">[{{ error }}]</span>
         {% endfor %}
     </p>
     <p>
         {{ form.password.label }}<br>
         {{ form.password(size=32) }}<br>
         {% for error in form.password.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+            <span id="success" style="color: red;">[{{ error }}]</span>
         {% endfor %}
     </p>
     <p>
         {{ form.two_fa.label }}<br>
         {{ form.two_fa(size=14) }}<br>
         {% for error in form.two_fa.errors %}
-            <span style="color: red;">[{{ error }}]</span>
+            <span id="success" style="color: red;">[{{ error }}]</span>
         {% endfor %}
     </p>
     <p>{{ form.submit() }}</p>

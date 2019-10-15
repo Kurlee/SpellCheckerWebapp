@@ -20,7 +20,7 @@ def validate_phone(form, field):
     # form is the registration form below
     # field is the phone number passed as two_fa
     if len(field.data) > 14:
-        raise ValidationError('This is an invalid phone number, too many characters')
+        raise ValidationError('Failure: This is an invalid phone number, too many characters')
     else:
         sanitized_phone_number = field.data.strip(' ()-')
         if len(sanitized_phone_number) == 10:
@@ -28,9 +28,9 @@ def validate_phone(form, field):
                 if sanitized_phone_number[i].isnumeric():
                     continue
                 else:
-                    raise ValidationError('Phone numbers must only contain numbers')
+                    raise ValidationError('Failure: Phone numbers must only contain numbers')
         else:
-            raise ValidationError('Phone numbers must contain 10 digits')
+            raise ValidationError('Failure: Phone numbers must contain 10 digits')
 
 
 class LoginForm(FlaskForm):
@@ -49,7 +49,7 @@ class RegistrationForm(FlaskForm):
     def validate_username(self, username):
         user = User.query.filter_by(username=username.data).first()
         if user is not None:
-            raise ValidationError('Username is already in use')
+            raise ValidationError('Failure: Username is already in use')
 
 
 class SubmissionForm(FlaskForm):
