@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, validators, SubmitField
 from wtforms.validators import DataRequired, ValidationError, Email
 from SpellCheckApp.models import User
 
@@ -36,14 +36,14 @@ def validate_phone(form, field):
 class LoginForm(FlaskForm):
     username = StringField('Username', id='uname', validators=[DataRequired()])
     password = PasswordField('Password', id='pword', validators=[DataRequired()])
-    two_fa = StringField('two_fa', id='2fa', validators=[DataRequired(), validate_phone])
+    two_fa = StringField('two_fa', id='2fa', validators=[validate_phone, validators.Optional()])
     submit = SubmitField('Sign in')
 
 
 class RegistrationForm(FlaskForm):
     username = StringField('Username', id='uname', validators=[DataRequired()])
     password = PasswordField('Password', id='pword', validators=[DataRequired()])
-    two_fa = StringField('two_fa', id='2fa', validators=[DataRequired(), validate_phone])
+    two_fa = StringField('two_fa', id='2fa', validators=[validate_phone, validators.Optional()])
     submit = SubmitField('Register')
 
     def validate_username(self, username):

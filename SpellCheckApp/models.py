@@ -7,6 +7,7 @@ from subprocess import check_output
 from hashlib import sha256
 import os
 
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username: Column = db.Column(db.String(64), index=True, unique=True)
@@ -34,29 +35,29 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post {}>'.format(self.body)
 
-    def set_result(self, body):
+    def set_result(self):
         # get hash of the post for file name
-        hash_object = sha256(body.encode('utf-8'))
+        hash_object = sha256(self.body.encode('utf-8'))
         filename = hash_object.hexdigest()
         file_path = os.path.join(DevelopmentConfig.UPLOADS_DIR, filename)
 
         # save the post to a file in order to pass to spell checker
         f = open(file_path, "w+")
-        f.write(body)
+        f.write(self.body)
         f.close()
 
         """     Example Command
-        /home/admin/PycharmProjects/untitled/SpellCheckApp/static/a.out 
-        /home/admin/PycharmProjects/untitled/SpellCheckApp/static/dictionary_file 
-        -c /home/admin/PycharmProjects/untitled/SpellCheckApp/static/uploads/filename
+        Usage: ./program to_check.txt wordlist.txt
         """
         result = check_output([DevelopmentConfig.STATIC_DIR + "/a.out",
-                               DevelopmentConfig.STATIC_DIR + "/dictionary_file",
-                               "-c",
-                               DevelopmentConfig.UPLOADS_DIR + "/" + filename
+                               DevelopmentConfig.UPLOADS_DIR + "/" + filename,
+                               DevelopmentConfig.STATIC_DIR + "/dictionary_file"
                                ])
         print(result.decode("utf-8"))
         self.result = result.decode("utf-8")
+
+    def get_result(self):
+        return self.result
 
 
 @login.user_loader

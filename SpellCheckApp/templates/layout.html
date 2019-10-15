@@ -24,11 +24,11 @@
         {% block body %}{%  endblock %}
     </div>
 
- {% with messages = get_flashed_messages() %}
+ {% with messages = get_flashed_messages(with_categories=true) %}
    {% if messages %}
      <ul class="flashes">
-        {% for message in messages %}
-         <div class="message_flash" id={{ message_type }}>{{ message }}</div>
+        {% for category, message in messages %}
+         <div class="message_flash" id={{ category }}>{{ message }}</div>
         {% endfor %}
     </ul>
   {% endif %}
