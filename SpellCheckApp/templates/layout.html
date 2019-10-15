@@ -28,7 +28,7 @@
    {% if messages %}
      <ul class="flashes">
         {% for category, message in messages %}
-         <div class="message_flash" id={{ category }}>{{ message }}</div>
+         <li name={{ category }}, type='text' class="message_flash" id={{ category }}>{{ message }}</li>
         {% endfor %}
     </ul>
   {% endif %}
