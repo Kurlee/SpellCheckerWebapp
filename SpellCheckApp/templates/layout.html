@@ -20,17 +20,13 @@
             {% endif %}
         </nav>
     </div>
-    <div class="container">
-        {% block body %}{%  endblock %}
-    </div>
+    {% block body %}{%  endblock %}
 
  {% with messages = get_flashed_messages(with_categories=true) %}
    {% if messages %}
-     <ul class="flashes">
-        {% for category, message in messages %}
-         <div class="message_flash" id={{ category }}>{{ message }}</div>
-        {% endfor %}
-    </ul>
+    {% for category, message in messages %}
+     <div id={{ category }}>{{ message }}</div>
+    {% endfor %}
   {% endif %}
  {% endwith %}
 
