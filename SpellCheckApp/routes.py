@@ -32,7 +32,8 @@ def register():
             user = User(username=form.username.data)
         # phone number supplied
         else:
-            user = User(username=form.username.data, two_fa=form.two_fa.data)
+            sanitized_phone_number = form.two_fa.data.data.strip(' ()-')
+            user = User(username=form.username.data, two_fa=sanitized_phone_number)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()

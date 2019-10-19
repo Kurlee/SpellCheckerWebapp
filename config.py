@@ -10,6 +10,8 @@ class Config(object):
     STATIC_DIR = os.path.join(APP_DIR, 'static')
     UPLOADS_DIR = os.path.join(STATIC_DIR, 'uploads')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or \
+                                'sqlite:///' + os.path.join(basedir, 'test.sqlite')
 
     @staticmethod
     def init_app(app):
