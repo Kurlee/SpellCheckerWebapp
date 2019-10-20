@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/Kurlee/SpellCheckerWebapp.svg?branch=master)](https://travis-ci.com/Kurlee/SpellCheckerWebapp)
+
 # Spell checking web application
 
 ###Buit with Flask!
