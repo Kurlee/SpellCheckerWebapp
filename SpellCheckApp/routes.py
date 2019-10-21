@@ -1,9 +1,11 @@
-from SpellCheckApp import db, app
+from SpellCheckApp import db
 from SpellCheckApp.forms import RegistrationForm, LoginForm, SubmissionForm
 from SpellCheckApp.models import User, Post
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
+
+spell_check = Blueprint('spell_check', __name__, template_folder='templates')
 
 """     
         1.User registration: /your/webroot/register
@@ -14,14 +16,14 @@ from werkzeug.urls import url_parse
 """
 
 
-@app.route('/')
-@app.route('/index')
+@spell_check.route('/')
+@spell_check.route('/index')
 @login_required
 def index():
     return render_template('index.html', title='Home')
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@spell_check.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -43,7 +45,7 @@ def register():
     return render_template('register.html', title='Register', form=form)
 
 
-@app.route('/login', methods=['GET', 'POST'])
+@spell_check.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('index'))
@@ -68,13 +70,13 @@ def login():
     return render_template('login.html', title='Sign In', form=form)
 
 
-@app.route('/logout')
+@spell_check.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
 
-@app.route('/spell_check', methods=['GET', 'POST'])
+@spell_check.route('/spell_check', methods=['GET', 'POST'])
 @login_required
 def submission():
     form = SubmissionForm()
