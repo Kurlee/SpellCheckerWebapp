@@ -47,7 +47,7 @@ class Post(db.Model):
 
     def set_result(self):
         STATIC_DIR = current_app.config['STATIC_DIR']
-        UPLOADS_DIR = current_app.config['UPLOAD_DIR']
+        UPLOADS_DIR = current_app.config['UPLOADS_DIR']
         # get hash of the post for file name
         hash_object = sha256(self.body.encode('utf-8'))
         filename = hash_object.hexdigest()
@@ -65,7 +65,6 @@ class Post(db.Model):
                                UPLOADS_DIR + "/" + filename,
                                STATIC_DIR + "/dictionary_file"
                                ])
-        print(result.decode("utf-8"))
         self.result = result.decode("utf-8")
 
     def get_result(self):

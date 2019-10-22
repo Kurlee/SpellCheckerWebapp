@@ -26,7 +26,7 @@ def index():
 @spell_check.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('spell_check.index'))
     form = RegistrationForm()
     if form.validate_on_submit():
         # no phone number supplied
@@ -34,13 +34,13 @@ def register():
             user = User(username=form.username.data)
         # phone number supplied
         else:
-            sanitized_phone_number = form.two_fa.data.data.strip(' ()-')
+            sanitized_phone_number = form.two_fa.data.strip(' ()-')
             user = User(username=form.username.data, two_fa=sanitized_phone_number)
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
         flash(u'success', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('spell_check.login'))
 
     return render_template('register.html', title='Register', form=form)
 
@@ -55,11 +55,11 @@ def login():
 
         if user is None or not user.check_password(form.password.data):
             flash('Incorrect username or password', "result")
-            return redirect(url_for('login'))
+            return redirect(url_for('spell_check.login'))
 
         if user.two_fa != form.two_fa.data:
             flash('failure to authenticate Two-factor', 'result')
-            return redirect(url_for('login'))
+            return redirect(url_for('spell_check.login'))
 
         login_user(user)
         next_page = request.args.get('next')
@@ -73,7 +73,7 @@ def login():
 @spell_check.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('spell_check.index'))
 
 
 @spell_check.route('/spell_check', methods=['GET', 'POST'])

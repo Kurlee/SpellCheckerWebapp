@@ -1,20 +1,21 @@
 import os
 import tempfile
 import pytest
-from SpellCheckApp import app, db
+from SpellCheckApp import db
+from flask import current_app
 from SpellCheckApp.models import User, Post
 
 
 @pytest.fixture(scope='module')
 def client():
-    db_fd, app.config['DATABASE'] = tempfile.mkstemp()
-    app.config['TESTING'] = True
+    db_fd, current_app.config['DATABASE'] = tempfile.mkstemp()
+    current_app.config['TESTING'] = True
 
-    with app.test_client() as client:
+    with current_app.test_client() as client:
         yield client
 
     os.close(db_fd)
-    os.unlink(app.config['DATABASE'])
+    os.unlink(current_app.config['DATABASE'])
 
 
 @pytest.fixture(scope='module')
