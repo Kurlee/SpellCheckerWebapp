@@ -28,6 +28,9 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
                               'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
     DEBUG = True
+    BCRYPT_LOG_ROUNDS = 4
+    TESTING = True
+    WTF_CSRF_ENABLED = False
 
 
 class ProductionConfig(Config):
