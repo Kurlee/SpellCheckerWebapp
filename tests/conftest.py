@@ -5,11 +5,9 @@ from SpellCheckApp import db, create_app
 from flask import current_app
 from SpellCheckApp.models import User, Post
 from SpellCheckApp import db as _db
+from config import basedir
 
 
-TESTDB = 'data-test.sqlite'
-TESTDB_PATH = "/home/admin/PycharmProjects/SpellCheckerWebapp/{}".format(TESTDB)
-TESTDB_URI = 'sqlite:///' + TESTDB_PATH
 
 """
 @pytest.fixture(scope='module')
@@ -46,6 +44,8 @@ def app(request):
 
 @pytest.fixture(scope='module')
 def db(app, request):
+    TESTDB = 'data-test.sqlite'
+    TESTDB_PATH = os.path.join(basedir, TESTDB)
     if os.path.exists(TESTDB_PATH):
         os.unlink(TESTDB_PATH)
 
