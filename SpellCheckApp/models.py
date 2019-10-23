@@ -1,11 +1,12 @@
 from sqlalchemy import Column
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from SpellCheckApp import db, login, Config
+from SpellCheckApp import db, login
+from flask import current_app
 from flask_login import UserMixin
 from subprocess import check_output
 from hashlib import sha256
-import os
+from os import path
 
 
 class User(UserMixin, db.Model):
@@ -45,10 +46,12 @@ class Post(db.Model):
         return '<Post {}>'.format(self.body)
 
     def set_result(self):
+        STATIC_DIR = current_app.config['STATIC_DIR']
+        UPLOADS_DIR = current_app.config['UPLOADS_DIR']
         # get hash of the post for file name
         hash_object = sha256(self.body.encode('utf-8'))
         filename = hash_object.hexdigest()
-        file_path = os.path.join(Config.UPLOADS_DIR, filename)
+        file_path = path.join(UPLOADS_DIR, filename)
 
         # save the post to a file in order to pass to spell checker
         f = open(file_path, "w+")
@@ -58,11 +61,10 @@ class Post(db.Model):
         """     Example Command
         Usage: ./program to_check.txt wordlist.txt
         """
-        result = check_output([Config.STATIC_DIR + "/a.out",
-                               Config.UPLOADS_DIR + "/" + filename,
-                               Config.STATIC_DIR + "/dictionary_file"
+        result = check_output([STATIC_DIR + "/a.out",
+                               UPLOADS_DIR + "/" + filename,
+                               STATIC_DIR + "/dictionary_file"
                                ])
-        print(result.decode("utf-8"))
         self.result = result.decode("utf-8")
 
     def get_result(self):
@@ -72,7 +74,7 @@ class Post(db.Model):
         return self.timestamp
 
     def get_author(self):
-        return User.query.get(self.user_id)
+        return User.query.get(self.user_id).username
 
     # edit body of the post
     # TODO : create timestamp to track the last edit time

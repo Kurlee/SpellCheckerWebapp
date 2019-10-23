@@ -1,24 +1,38 @@
 from flask import Flask
-from config import Config
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+from flask_migrate import Migrate, MigrateCommand
 from flask_login import LoginManager
+from flask_script import Manager
+
+""" Config """
+
+db = SQLAlchemy()
+login = LoginManager()
+migrate = Migrate()
+manager = Manager()
+login.login_view = 'spell_check.login'
+
+""" Initialize extensions """
 
 
+def initialize_extensions(app):
+    from .models import User, Post
+    db.init_app(app)
+    login.init_app(app)
+    migrate.init_app(app, db)
+    manager.add_command('db', MigrateCommand)
 
-"""initialize the application"""
-app = Flask(__name__)
-app.config.from_object(Config)
+
+""" Application Factory """
 
 
-"""Initialize plugins"""
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-login = LoginManager(app)
-login.login_view = 'login'
-from SpellCheckApp import routes, models
-
-# db.create_all()
-# db.session.commit()
+def create_app(config_filename = 'config.Config'):
+    app = Flask(__name__)
+    app.config.from_object(config_filename)
+    initialize_extensions(app)
+    from .routes import spell_check
+    from . import models, routes
+    app.register_blueprint(spell_check)
+    return app
 
 
