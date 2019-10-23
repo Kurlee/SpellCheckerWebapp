@@ -4,8 +4,14 @@ import pytest
 from SpellCheckApp import db, create_app
 from flask import current_app
 from SpellCheckApp.models import User, Post
+from SpellCheckApp import db as _db
 
 
+TESTDB = 'data-test.sqlite'
+TESTDB_PATH = "/home/admin/PycharmProjects/SpellCheckerWebapp/{}".format(TESTDB)
+TESTDB_URI = 'sqlite:///' + TESTDB_PATH
+
+"""
 @pytest.fixture(scope='module')
 def client():
     db_fd, current_app.config['DATABASE'] = tempfile.mkstemp()
@@ -16,6 +22,7 @@ def client():
 
     os.close(db_fd)
     os.unlink(current_app.config['DATABASE'])
+"""
 
 
 @pytest.fixture(scope='module')
@@ -25,70 +32,51 @@ def new_user():
 
 
 @pytest.fixture(scope='module')
-def init_database():
+def app(request):
+    app = create_app('config.TestingConfig')
+    ctx = app.app_context()
+    ctx.push()
 
-    # UID 1
-    gooduser1 = User(username='withphone', two_fa='1234567891')
-    # UID 2
-    gooduser2 = User(username='withphone1', two_fa='9999999999')
-    # UID 3
-    gooduser_nophone1 = User(username='nophone', two_fa='')
-    body_clean1 = "This text has no misspellings"
-    body_clean2 = "This text has no misspellings and contains some symbols: "
-    body_clean_duplicate = "This text has no misspellings "
-    body_dirty1 = "This text has one word misspelled: isntall"
-    body_dirty2 = "This text has one word misspelled: catsss"
-    body_dirty_xss = "This text has basic xss: <script>alert(1)</script>"
-    body_dirty_afl = "This text has an AFL test case:\
-                =================== \
-                AFL ting test cases \
-                ========= \
-                  (See READwelcomegeneral il.) \
-                 \
-                The arcs/, images/, multimedia/, and others/ sudirPcto contain small, \
-                staniles that can be used to seed ars for a \
-                vqriety oI common data formats. \
-                 \
-                There is proÑably noth to be said about,tes, pt that themized for size and stripped of any nonential fluf∑∑∑∑∑∑∑∑∑∑∑∑∑∑∑∑∑∑∑∑∑∑f. Some directories \
-                contain sse varioˇ fÄ Ëres of the unÜerlying format. \
-                For example, there is a PNG file with and wihouwelcomeor profile.ˇ \
-                Additionak˝test es \
-                are always welcome. \
-                en starting f   d Ò     fuzzing jåbs benefit from a\
-                sma~l and concise dictionary.See ../dictioÜaries/README.dictionarieboutr more."
-    post1_clean = Post(body=body_clean1, user_id=1)
-    post2_clean = Post(body=body_clean2, user_id=2)
-    post3_clean = Post(body=body_clean_duplicate, user_id=1)
-    post1_dirty = Post(body=body_dirty1, user_id=2)
-    post2_dirty = Post(body=body_dirty2, user_id=1)
-    post3_dirty = Post(body=body_dirty_xss, user_id=3)
-    post4_dirty = Post(body=body_dirty_afl, user_id=3)
+    def teardown():
+        ctx.pop()
+
+    request.addfinalizer(teardown)
+    return app
 
 
-    """ Commit users to the DB """
-    db.create_all()
-    db.session.commit()
+@pytest.fixture(scope='module')
+def db(app, request):
+    if os.path.exists(TESTDB_PATH):
+        os.unlink(TESTDB_PATH)
 
-    db.session.add(gooduser1)
-    db.session.add(gooduser2)
-    db.session.add(gooduser_nophone1)
-    db.session.commit()
+    def teardown():
+        _db.drop_all()
+        os.unlink(TESTDB_PATH)
 
-    """ Commit Posts to the DB """
+    _db.app = app
+    _db.create_all()
 
-    db.session.add(post1_clean)
-    db.session.add(post2_clean)
-    db.session.add(post3_clean)
-    db.session.add(post1_dirty)
-    db.session.add(post2_dirty)
-    db.session.add(post3_dirty)
-    db.session.add(post4_dirty)
+    request.addfinalizer(teardown)
+    return _db
 
-    db.session.commit()
 
-    yield db
+@pytest.fixture(scope='module')
+def session(db, request):
+    connection = db.engine.connect()
+    transaction = connection.begin()
 
-    db.drop_all()
+    options = dict(bind=connection, binds={})
+    session = db.create_scoped_session(options=options)
+
+    db.session = session
+
+    def teardown():
+        transaction.rollback()
+        connection.close()
+        session.remove()
+
+    request.addfinalizer(teardown)
+    return session
 
 
 @pytest.fixture(scope='module')
@@ -101,5 +89,3 @@ def test_client():
     ctx.push()
     yield testing_client
     ctx.pop()
-
-

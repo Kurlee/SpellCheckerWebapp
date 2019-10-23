@@ -74,7 +74,7 @@ class Post(db.Model):
         return self.timestamp
 
     def get_author(self):
-        return User.query.get(self.user_id)
+        return User.query.get(self.user_id).username
 
     # edit body of the post
     # TODO : create timestamp to track the last edit time
