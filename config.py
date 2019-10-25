@@ -4,6 +4,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
+    BASEDIR = os.path.abspath(os.path.dirname(__file__))
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'averysecretkey'
     APP_DIR = os.path.join(basedir, "SpellCheckApp")
     TEMPLATES_DIR = os.path.join(APP_DIR, 'templates')
@@ -28,6 +29,9 @@ class TestingConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('TEST_DATABASE_URL') or \
                               'sqlite:///' + os.path.join(basedir, 'data-test.sqlite')
     DEBUG = True
+    BCRYPT_LOG_ROUNDS = 4
+    TESTING = True
+    WTF_CSRF_ENABLED = False
 
 
 class ProductionConfig(Config):

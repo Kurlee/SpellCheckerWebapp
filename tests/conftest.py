@@ -1,20 +1,26 @@
 import os
 import tempfile
 import pytest
-from SpellCheckApp import app, db
+from SpellCheckApp import db, create_app
+from flask import current_app
 from SpellCheckApp.models import User, Post
+from SpellCheckApp import db as _db
+from config import basedir
 
 
+
+"""
 @pytest.fixture(scope='module')
 def client():
-    db_fd, app.config['DATABASE'] = tempfile.mkstemp()
-    app.config['TESTING'] = True
+    db_fd, current_app.config['DATABASE'] = tempfile.mkstemp()
+    current_app.config['TESTING'] = True
 
-    with app.test_client() as client:
+    with current_app.test_client() as client:
         yield client
 
     os.close(db_fd)
-    os.unlink(app.config['DATABASE'])
+    os.unlink(current_app.config['DATABASE'])
+"""
 
 
 @pytest.fixture(scope='module')
@@ -22,20 +28,64 @@ def new_user():
     user = User(username='withphone', two_fa='1234567891')
     return user
 
+
 @pytest.fixture(scope='module')
-def init_database():
-    gooduser1 = User(username='withphone', two_fa='1234567891')
-    gooduser2 = User(username='withphone1', two_fa='9999999999')
-    gooduser_nophone1 = User(username='nophone', two_fa='')
+def app(request):
+    app = create_app('config.TestingConfig')
+    ctx = app.app_context()
+    ctx.push()
 
-    db.create_all()
-    db.session.commit()
+    def teardown():
+        ctx.pop()
 
-    db.session.add(gooduser1)
-    db.session.add(gooduser2)
-    db.session.add(gooduser_nophone1)
-    db.session.commit()
+    request.addfinalizer(teardown)
+    return app
 
-    yield db
 
-    db.drop_all()
+@pytest.fixture(scope='module')
+def db(app, request):
+    TESTDB = 'data-test.sqlite'
+    TESTDB_PATH = os.path.join(basedir, TESTDB)
+    if os.path.exists(TESTDB_PATH):
+        os.unlink(TESTDB_PATH)
+
+    def teardown():
+        _db.drop_all()
+        os.unlink(TESTDB_PATH)
+
+    _db.app = app
+    _db.create_all()
+
+    request.addfinalizer(teardown)
+    return _db
+
+
+@pytest.fixture(scope='module')
+def session(db, request):
+    connection = db.engine.connect()
+    transaction = connection.begin()
+
+    options = dict(bind=connection, binds={})
+    session = db.create_scoped_session(options=options)
+
+    db.session = session
+
+    def teardown():
+        transaction.rollback()
+        connection.close()
+        session.remove()
+
+    request.addfinalizer(teardown)
+    return session
+
+
+@pytest.fixture(scope='module')
+def test_client():
+    flask_app = current_app('config.TestingConfig')
+
+    testing_client = flask_app.test_client()
+
+    ctx = flask_app.app_context()
+    ctx.push()
+    yield testing_client
+    ctx.pop()
