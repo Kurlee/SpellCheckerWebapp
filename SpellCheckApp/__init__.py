@@ -26,7 +26,7 @@ def initialize_extensions(app):
 """ Application Factory """
 
 
-def create_app(config_filename = 'config.Config'):
+def create_app(config_filename = 'config.ProductionConfig'):
     app = Flask(__name__)
     app.config.from_object(config_filename)
     initialize_extensions(app)

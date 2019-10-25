@@ -1,4 +1,5 @@
 from SpellCheckApp.models import User, Post
+import pytest
 
 
 def test_users_in_db(session):
@@ -55,6 +56,15 @@ def test_posts_in_db(session):
     post3_dirty = Post(body=body_dirty_xss, user_id=3)
     post4_dirty = Post(body=body_dirty_afl, user_id=3)
 
+    post1_clean.set_result()
+    post2_clean.set_result()
+    post3_clean.set_result()
+    post1_dirty.set_result()
+    post2_dirty.set_result()
+    post3_dirty.set_result()
+    with pytest.raises(UnicodeDecodeError):
+        post4_dirty.set_result()
+
     session.add(post1_clean)
     session.add(post2_clean)
     session.add(post3_clean)
@@ -66,5 +76,12 @@ def test_posts_in_db(session):
     session.commit()
 
     assert post1_dirty.get_author() == 'withphone1'
+    assert post1_clean.get_result() == ''
+    assert post2_clean.get_result() == ''
+    assert post3_clean.get_result() == ''
+    assert post1_dirty.get_result() == 'isntall\n'
+    assert post2_dirty.get_result() == 'catsss\n'
+    assert post3_dirty.get_result() == 'xss\nscript>alert(1)</script\n'
+
 
 
