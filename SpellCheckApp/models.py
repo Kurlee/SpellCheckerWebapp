@@ -14,6 +14,8 @@ class User(UserMixin, db.Model):
     username: Column = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     two_fa: Column = db.Column(db.String(14))
+    last_login_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    last_logout_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     post = db.relationship('Post', backref='author', lazy='dynamic')
 
     def set_password(self, password):
