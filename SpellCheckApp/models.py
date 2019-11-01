@@ -52,7 +52,7 @@ class Post(db.Model):
         STATIC_DIR = current_app.config['STATIC_DIR']
         UPLOADS_DIR = current_app.config['UPLOADS_DIR']
         # get hash of the post for file name
-        fp = TemporaryFile(dir=UPLOADS_DIR)
+        fp = TemporaryFile(mode="w+", dir=UPLOADS_DIR)
 
         # hash_object = sha256(self.body.encode('utf-8'))
         # filename = hash_object.hexdigest()
