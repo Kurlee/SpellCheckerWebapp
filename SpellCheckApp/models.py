@@ -15,6 +15,7 @@ class User(UserMixin, db.Model):
     username: Column = db.Column(db.String(64), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     two_fa: Column = db.Column(db.String(14))
+    creation_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     last_login_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     last_logout_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     post = db.relationship('Post', backref='author', lazy='dynamic')
@@ -24,6 +25,24 @@ class User(UserMixin, db.Model):
 
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def set_creation_time(self, time):
+        self.creation_time = time
+
+    def get_creation_time(self):
+        return self.creation_time
+
+    def set_last_login_time(self, time):
+        self.last_login_time = time
+
+    def get_last_login_time(self):
+        return self.last_login_time
+
+    def set_last_logout_time(self, time):
+        self.last_logout_time = time
+
+    def get_last_logout_time(self):
+        return self.last_logout_time
 
     def get_id(self):
         return str(self.id)

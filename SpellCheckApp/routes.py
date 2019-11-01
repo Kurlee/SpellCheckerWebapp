@@ -38,6 +38,7 @@ def register():
             sanitized_phone_number = form.two_fa.data.strip(' ()-')
             user = User(username=form.username.data, two_fa=sanitized_phone_number)
         user.set_password(form.password.data)
+        user.set_creation_time(datetime.utcnow())
         db.session.add(user)
         db.session.commit()
         flash(u'success', 'success')
@@ -62,11 +63,11 @@ def login():
             flash('failure to authenticate Two-factor', 'result')
             return redirect(url_for('spell_check.login'))
 
-        user.last_login_time = datetime.utcnow()
+        user.set_last_login_time(datetime.utcnow())
         login_user(user)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
-            next_page = "spell_check.index"
+            next_page = "index"
         flash("success", "result")
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
@@ -74,7 +75,7 @@ def login():
 
 @spell_check.route('/logout')
 def logout():
-    current_user.last_logout_time = datetime.utcnow()
+    current_user.set_last_logout_time(datetime.utcnow())
     db.session.commit()
     logout_user()
     return redirect(url_for('spell_check.index'))
