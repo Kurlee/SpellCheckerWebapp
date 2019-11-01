@@ -62,6 +62,7 @@ def test_posts_in_db(session):
     post1_dirty.set_result()
     post2_dirty.set_result()
     post3_dirty.set_result()
+
     with pytest.raises(UnicodeDecodeError):
         post4_dirty.set_result()
 

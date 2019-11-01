@@ -61,6 +61,7 @@ class Post(db.Model):
         # save the post to a file in order to pass to spell checker
         # f = open(file_path, "w+")
         fp.write(self.body)
+        fp.seek(0)
 
         """     Example Command
         Usage: ./program to_check.txt wordlist.txt
@@ -69,6 +70,7 @@ class Post(db.Model):
                                fp.name,
                                STATIC_DIR + "/dictionary_file"
                                ])
+        print (result)
         self.result = result.decode("utf-8")
 
         # Delete temporary file after passing to the spell checker
