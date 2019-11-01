@@ -7,6 +7,7 @@ from flask_login import UserMixin
 from subprocess import check_output
 from hashlib import sha256
 from os import path
+from tempfile import NamedTemporaryFile
 
 
 class User(UserMixin, db.Model):
@@ -51,23 +52,29 @@ class Post(db.Model):
         STATIC_DIR = current_app.config['STATIC_DIR']
         UPLOADS_DIR = current_app.config['UPLOADS_DIR']
         # get hash of the post for file name
-        hash_object = sha256(self.body.encode('utf-8'))
-        filename = hash_object.hexdigest()
-        file_path = path.join(UPLOADS_DIR, filename)
+        fp = NamedTemporaryFile(mode="w+", dir=UPLOADS_DIR)
+
+        # hash_object = sha256(self.body.encode('utf-8'))
+        # filename = hash_object.hexdigest()
+        # file_path = path.join(UPLOADS_DIR, filename)
 
         # save the post to a file in order to pass to spell checker
-        f = open(file_path, "w+")
-        f.write(self.body)
-        f.close()
+        # f = open(file_path, "w+")
+        fp.write(self.body)
+        fp.seek(0)
 
         """     Example Command
         Usage: ./program to_check.txt wordlist.txt
         """
         result = check_output([STATIC_DIR + "/a.out",
-                               UPLOADS_DIR + "/" + filename,
+                               fp.name,
                                STATIC_DIR + "/dictionary_file"
                                ])
+        print (result)
         self.result = result.decode("utf-8")
+
+        # Delete temporary file after passing to the spell checker
+        fp.close()
 
     def get_result(self):
         return self.result
