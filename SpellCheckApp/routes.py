@@ -1,4 +1,5 @@
 from SpellCheckApp import db
+from datetime import datetime
 from SpellCheckApp.forms import RegistrationForm, LoginForm, SubmissionForm
 from SpellCheckApp.models import User, Post
 from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint
@@ -61,6 +62,7 @@ def login():
             flash('failure to authenticate Two-factor', 'result')
             return redirect(url_for('spell_check.login'))
 
+        user.last_login_time = datetime.utcnow()
         login_user(user)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
@@ -72,6 +74,8 @@ def login():
 
 @spell_check.route('/logout')
 def logout():
+    current_user.last_logout_time = datetime.utcnow()
+    db.session.commit()
     logout_user()
     return redirect(url_for('spell_check.index'))
 
@@ -90,3 +94,6 @@ def submission():
     return render_template("submission.html", title='Submit text', form=form)
 
 
+@spell_check.before_request
+def before_request():
+    pass
