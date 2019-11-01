@@ -66,7 +66,7 @@ class Post(db.Model):
         Usage: ./program to_check.txt wordlist.txt
         """
         result = check_output([STATIC_DIR + "/a.out",
-                               UPLOADS_DIR + "/" + fp.name,
+                               fp.name,
                                STATIC_DIR + "/dictionary_file"
                                ])
         self.result = result.decode("utf-8")
