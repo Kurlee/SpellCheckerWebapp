@@ -7,7 +7,7 @@ from flask_login import UserMixin
 from subprocess import check_output
 from hashlib import sha256
 from os import path
-from tempfile import TemporaryFile
+from tempfile import NamedTemporaryFile
 
 
 class User(UserMixin, db.Model):
@@ -52,7 +52,7 @@ class Post(db.Model):
         STATIC_DIR = current_app.config['STATIC_DIR']
         UPLOADS_DIR = current_app.config['UPLOADS_DIR']
         # get hash of the post for file name
-        fp = TemporaryFile(mode="w+", dir=UPLOADS_DIR)
+        fp = NamedTemporaryFile(mode="w+", dir=UPLOADS_DIR)
 
         # hash_object = sha256(self.body.encode('utf-8'))
         # filename = hash_object.hexdigest()
@@ -66,7 +66,7 @@ class Post(db.Model):
         Usage: ./program to_check.txt wordlist.txt
         """
         result = check_output([STATIC_DIR + "/a.out",
-                               UPLOADS_DIR + "/" + fp,
+                               UPLOADS_DIR + "/" + fp.name,
                                STATIC_DIR + "/dictionary_file"
                                ])
         self.result = result.decode("utf-8")
