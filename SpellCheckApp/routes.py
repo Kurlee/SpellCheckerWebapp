@@ -21,7 +21,7 @@ spell_check = Blueprint('spell_check', __name__, template_folder='templates')
 @spell_check.route('/index')
 @login_required
 def index():
-    return render_template('index.html', title='Home')
+    return render_template(url_for('spell_check.index'), title='Home')
 
 
 @spell_check.route('/register', methods=['GET', 'POST'])
@@ -44,7 +44,7 @@ def register():
         flash(u'success', 'success')
         return redirect(url_for('spell_check.login'))
 
-    return render_template('register.html', title='Register', form=form)
+    return render_template(url_for('spell_check.register'), title='Register', form=form)
 
 
 @spell_check.route('/login', methods=['GET', 'POST'])
@@ -93,6 +93,11 @@ def submission():
         flash('Submission successful!')
         return render_template("submission.html", title='Submit text', form=form, post=post)
     return render_template("submission.html", title='Submit text', form=form)
+
+@spell_check.route('/history', methods=['GET'])
+@login_required
+def history():
+    posts = current_user.posts.all()
 
 
 @spell_check.before_request
