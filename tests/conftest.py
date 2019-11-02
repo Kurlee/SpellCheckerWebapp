@@ -1,5 +1,4 @@
 import os
-import tempfile
 import pytest
 from SpellCheckApp import db, create_app
 from flask import current_app
