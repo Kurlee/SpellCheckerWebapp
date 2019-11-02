@@ -2,9 +2,10 @@ from SpellCheckApp import db
 from datetime import datetime
 from SpellCheckApp.forms import RegistrationForm, LoginForm, SubmissionForm
 from SpellCheckApp.models import User, Post
-from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint
+from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint, logging
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
+
 
 spell_check = Blueprint('spell_check', __name__, template_folder='templates')
 
@@ -86,6 +87,7 @@ def logout():
 def submission():
     form = SubmissionForm()
     if form.validate_on_submit():
+        current_user.increment_query_num()
         post = Post(body=form.inputtext.data, user_id=current_user.id)
         post.set_result()
         db.session.add(post)
@@ -94,10 +96,26 @@ def submission():
         return render_template("submission.html", title='Submit text', form=form, post=post)
     return render_template("submission.html", title='Submit text', form=form)
 
+
 @spell_check.route('/history', methods=['GET'])
 @login_required
 def history():
     posts = current_user.posts.all()
+    title = current_user.username + "'s Submission History"
+    return render_template('history.html', title=title, posts=posts)
+
+
+@spell_check.route('/history/query<post_id>')
+@login_required
+def query(post_id):
+    post = Post.query.filter_by(id=post_id)
+    post_author = post.get_author()
+    if post_author == current_user.username:
+        return render_template("queryid.html", query_id=post)
+    else:
+        current_app.logging.warning("User: "+current_user.username+" - Attempted unauthorized submission review")
+        return render_template("forbidden.html")
+
 
 
 @spell_check.before_request

@@ -1,0 +1,25 @@
+{% block body %}
+<h1 class="text-center">A Spell Checker</h1>
+<h2>Hi, {{ current_user.username }}!</h2>
+
+<div class="col-sm-6 offset-sm-3">
+     {% if post is defined %}
+    <p>
+        <h4>Submitted Text</h4>
+        <div id="textout">
+            {{ post.body }}<br>
+        </div>
+
+        <h4>Results</h4>
+        <div id="misspelled">
+            <b>{{ post.result }}</b><br>
+        </div>
+    </p>
+
+     {% else %}
+         <p>
+         There is no content for this post, I should probably log this.
+         </p>
+    {% endif %}
+</div>
+{% endblock %}

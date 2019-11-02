@@ -1,0 +1,29 @@
+{%  extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block body %}
+    <h1 class="text-center">A Spell Checker</h1>
+    <h2>Hi, {{ current_user.username }}!</h2>
+
+    <p id="numqueries">
+    You have {{ current_user.total_query_num }} previous submissions
+    </p><br>
+
+    {% if posts is defined %}
+
+        {% for post in posts %}
+            <p>
+            <h4>Submitted Text {{ post.id }}</h4>
+            <div id="query{{ post.id }}">
+                {{ post.body }}<br>
+            </div>
+            <a href="{{ url_for('spell_check.histroy }}"
+        {% endfor %}
+
+    {% else %}
+        <p>
+            You don't seem to have any submission history, navigate to the <a title="Submission Page" href={{ url_for("spell_check.submission") }}>Submission page</a> to submit text!
+        </p>
+
+    {% endif %}
+
+{% endblock %}

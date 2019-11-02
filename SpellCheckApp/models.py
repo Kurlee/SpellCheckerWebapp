@@ -19,6 +19,7 @@ class User(UserMixin, db.Model):
     last_login_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     last_logout_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     post = db.relationship('Post', backref='author', lazy='dynamic')
+    total_query_num = db.Column(db.Integer, default=0)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password, 'pbkdf2:sha256', 20)
@@ -52,6 +53,15 @@ class User(UserMixin, db.Model):
 
     def get_username(self):
         return self.username
+
+    def set_query_num(self, number_of_queries):
+        self.total_query_num = number_of_queries
+
+    def increment_query_num(self):
+        self.total_query_num = self.total_query_num + 1
+
+    def get_query_num(self):
+        return self.total_query_num
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
