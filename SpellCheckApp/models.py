@@ -20,6 +20,7 @@ class User(UserMixin, db.Model):
     last_logout_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     post = db.relationship('Post', backref='author', lazy='dynamic')
     total_query_num = db.Column(db.Integer, default=0)
+    is_admin = db.Column(db.Boolean)
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password, 'pbkdf2:sha256', 20)
@@ -62,6 +63,12 @@ class User(UserMixin, db.Model):
 
     def get_query_num(self):
         return self.total_query_num
+
+    def get_is_admin(self):
+        return self.is_admin
+
+    def set_is_admin(self, priv_mod):
+        self.is_admin = priv_mod
 
     def __repr__(self):
         return '<User {}>'.format(self.username)

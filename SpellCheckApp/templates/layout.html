@@ -18,7 +18,11 @@
                 <a class="p-2 text-dark" href="{{ url_for('spell_check.submission') }}" title="Submit">Text Submission</a>
                 <a class="p-2 text-dark" href="{{ url_for('spell_check.history') }}" title="Submit">History</a>
                 <a class="p-2 text-dark" href="{{ url_for('spell_check.logout') }}" title="Logout">Logout</a>
+                {% if current_user.get_is_admin() %}
+                    <a class="p-2 text-dark" href="{{ url_for('spell_check.login_history') }}" title="Admin">Admin Panel</a>
+                {% endif %}
             {% endif %}
+
         </nav>
     </div>
     <div class="container">

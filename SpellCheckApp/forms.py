@@ -56,4 +56,6 @@ class SubmissionForm(FlaskForm):
     inputtext = StringField('CheckText', id='inputtext', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+class LoginHistory(FlaskForm):
+    userid = StringField('Username', id='userid', validators=[DataRequired()])
 

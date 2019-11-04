@@ -105,16 +105,26 @@ def history():
     return render_template('history.html', title=title, posts=posts)
 
 
-@spell_check.route('/history/query<post_id>')
+@spell_check.route('/history/query<post_id>', methods=['GET'])
 @login_required
 def query(post_id):
     post = Post.query.filter_by(id=post_id)
     post_author = post.get_author()
-    if post_author == current_user.username:
+    if post_author == current_user.username or current_user.get_is_admin():
         return render_template("queryid.html", query_id=post)
     else:
         current_app.logging.warning("User: "+current_user.username+" - Attempted unauthorized submission review")
         return render_template("forbidden.html")
+
+
+@spell_check.route('/login_history', methods=['GET'])
+@login_required
+def login_history():
+    if current_user.get_is_admin():
+        return render_template('admin.html')
+    else:
+        current_app.logging.warning("User: "+current_user.username+" - Attempted unauthorized view of admin panel")
+        render_template('forbidden.html')
 
 
 
