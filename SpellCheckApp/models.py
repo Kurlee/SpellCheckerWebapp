@@ -5,8 +5,6 @@ from SpellCheckApp import db, login
 from flask import current_app
 from flask_login import UserMixin
 from subprocess import check_output
-from hashlib import sha256
-from os import path
 from tempfile import NamedTemporaryFile
 
 
@@ -16,9 +14,8 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     two_fa: Column = db.Column(db.String(14))
     creation_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    last_login_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    last_logout_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
     post = db.relationship('Post', backref='author', lazy='dynamic')
+    history = db.relationship('History', backref='event_owner', lazy='dynamic')
     total_query_num = db.Column(db.Integer, default=0)
     is_admin = db.Column(db.Boolean)
 
@@ -33,18 +30,6 @@ class User(UserMixin, db.Model):
 
     def get_creation_time(self):
         return self.creation_time
-
-    def set_last_login_time(self, time):
-        self.last_login_time = time
-
-    def get_last_login_time(self):
-        return self.last_login_time
-
-    def set_last_logout_time(self, time):
-        self.last_logout_time = time
-
-    def get_last_logout_time(self):
-        return self.last_logout_time
 
     def get_id(self):
         return str(self.id)
@@ -72,6 +57,35 @@ class User(UserMixin, db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
+
+
+class History(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    login_time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+    logout_time = db.Column(db.DateTime, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return '<History - EID:{}, UID:{}, Login:{}, Logout{}>'.format(
+            self.id, self.user_id, self.login_time, self.logout_time)
+
+    def get_eid(self):
+        return str(self.id)
+
+    def get_uid(self):
+        return str(self.user_id)
+
+    def set_login_time(self, time):
+        self.login_time = time
+
+    def get_login_time(self):
+        return self.last_login_time
+
+    def set_logout_time(self, time):
+        self.logout_time = time
+
+    def get_logout_time(self):
+        return self.last_logout_time
 
 
 class Post(db.Model):

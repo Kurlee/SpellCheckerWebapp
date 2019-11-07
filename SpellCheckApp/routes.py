@@ -1,8 +1,8 @@
 from SpellCheckApp import db
 from datetime import datetime
-from SpellCheckApp.forms import RegistrationForm, LoginForm, SubmissionForm
-from SpellCheckApp.models import User, Post
-from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint, logging
+from SpellCheckApp.forms import RegistrationForm, LoginForm, SubmissionForm, LoginHistory
+from SpellCheckApp.models import User, Post, History
+from flask import render_template, flash, redirect, url_for, request, current_app, Blueprint
 from flask_login import current_user, login_user, logout_user, login_required
 from werkzeug.urls import url_parse
 
@@ -64,19 +64,26 @@ def login():
             flash('failure to authenticate Two-factor', 'result')
             return redirect(url_for('spell_check.login'))
 
-        user.set_last_login_time(datetime.utcnow())
         login_user(user)
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = "index"
         flash("success", "result")
+
+        """ Create login history entry """
+        hist = History(login_time=datetime.utcnow(), user_id=current_user.id)
+        db.session.add(hist)
+        db.session.commit()
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
 
 @spell_check.route('/logout')
 def logout():
-    current_user.set_last_logout_time(datetime.utcnow())
+    """ Get the most recent login entry, and set the logout time """
+    hist = current_user.history.order_by(History.id.desc()).first()
+    hist.set_logout_time = datetime.utcnow()
+    db.session.add(hist)
     db.session.commit()
     logout_user()
     return redirect(url_for('spell_check.index'))
@@ -113,7 +120,6 @@ def query(post_id):
     if post_author == current_user.username or current_user.get_is_admin():
         return render_template("queryid.html", query_id=post)
     else:
-        current_app.logging.warning("User: "+current_user.username+" - Attempted unauthorized submission review")
         return render_template("forbidden.html")
 
 
@@ -121,9 +127,14 @@ def query(post_id):
 @login_required
 def login_history():
     if current_user.get_is_admin():
-        return render_template('admin.html')
+        form = LoginHistory()
+        users = User.query.all()
+        if form.validate_on_submit():
+            user = User.query.get(form.userid.data)
+
+            return render_template("admin.html", title="Admin Panel", form=form, users=users, user=user)
+        return render_template('admin.html', title="Admin Panel", form=form, users=users)
     else:
-        current_app.logging.warning("User: "+current_user.username+" - Attempted unauthorized view of admin panel")
         render_template('forbidden.html')
 
 

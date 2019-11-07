@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, validators, SubmitField
+from wtforms import StringField, PasswordField, validators, SubmitField, IntegerField
 from wtforms.validators import DataRequired, ValidationError, Email
 from SpellCheckApp.models import User
 
@@ -56,6 +56,7 @@ class SubmissionForm(FlaskForm):
     inputtext = StringField('CheckText', id='inputtext', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+
 class LoginHistory(FlaskForm):
-    userid = StringField('Username', id='userid', validators=[DataRequired()])
+    userid = IntegerField('Username', id='userid', validators=[DataRequired()])
 
