@@ -66,3 +66,9 @@ class QueryHistory(FlaskForm):
     username = StringField('Username', id='userquery', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user is None:
+            raise ValidationError('Failure: Username does not match any existing user')
+
+
