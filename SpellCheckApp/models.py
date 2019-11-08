@@ -79,13 +79,13 @@ class History(db.Model):
         self.login_time = time
 
     def get_login_time(self):
-        return self.last_login_time
+        return self.login_time
 
     def set_logout_time(self, time):
         self.logout_time = time
 
     def get_logout_time(self):
-        return self.last_logout_time
+        return self.logout_time
 
 
 class Post(db.Model):
@@ -99,17 +99,18 @@ class Post(db.Model):
         return '<Post {}>'.format(self.body)
 
     def set_result(self):
+        """
+        Uses a temporary file to store contents of the post
+        Passes the contents to the spell checker
+        Stores the results in the database
+        Deletes the temporary file.
+        :return:
+        """
         STATIC_DIR = current_app.config['STATIC_DIR']
         UPLOADS_DIR = current_app.config['UPLOADS_DIR']
         # get hash of the post for file name
         fp = NamedTemporaryFile(mode="w+", dir=UPLOADS_DIR)
 
-        # hash_object = sha256(self.body.encode('utf-8'))
-        # filename = hash_object.hexdigest()
-        # file_path = path.join(UPLOADS_DIR, filename)
-
-        # save the post to a file in order to pass to spell checker
-        # f = open(file_path, "w+")
         fp.write(self.body)
         fp.seek(0)
 
@@ -120,7 +121,6 @@ class Post(db.Model):
                                fp.name,
                                STATIC_DIR + "/dictionary_file"
                                ])
-        print (result)
         self.result = result.decode("utf-8")
 
         # Delete temporary file after passing to the spell checker
@@ -141,6 +141,14 @@ class Post(db.Model):
         self.body = edited_body
         self.set_result()
 
+    def get_body(self):
+        return self.body
+
+    def get_id(self):
+        return self.id
+
+    def get_user_id(self):
+        return self.user_id
 
 @login.user_loader
 def load_user(id):

@@ -7,7 +7,8 @@
     <p>Select from the following users:</p><br>
     <ul>
         {% for user in users %}
-        <li>user</li>
+        <li>Username: {{ user.get_username() }} UID: {{ user.get_id() }}</li>
+        {% endfor %}
     </ul>
 
     <form action="" method="post">
@@ -25,26 +26,33 @@
 
     {% if user is defined %}
         <p>
-        <h4>User:{{ user.get_username }}</h4>
-        <u><h5>Login History</h5></u>
+        <h4>User:{{ user.get_username() }}</h4>
+        <h5 style="text-underline: black">Login History</h5>
         <table>
+
             <tr>
                 <th>User ID</th>
                 <th>Record ID</th>
                 <th>Login Time</th>
                 <th>Logout Time</th>
             </tr>
+
             {% for record in user.history.all() %}
             <tr>
-                <th>{{ record.get_uid }}</th>
-                <th>{{ record.get_eid }}</th>
-                <th id="login{{ record.get_eid }}_time">
-                    {{ record.get_login_time }}
+                <th>{{ record.get_uid() }}</th>
+                <th>{{ record.get_eid() }}</th>
+                <th id="login{{ record.get_eid() }}_time">
+                    {{ record.get_login_time() }}
                 </th>
-                <th id="logout{{ record.get_eid }}_time">
-                    {{ record.get_logout_time }}
-                </th>
+                {% if record.get_logout_time() == None %}
+                    <th id="logout{{ record.get_eid() }}_time">N/A</th>
+                {% else %}
+                    <th id="logout{{ record.get_eid() }}_time">
+                        {{ record.get_logout_time() }}
+                    </th>
+                {% endif %}
             </tr>
+            {% endfor %}
 
         </table>
 

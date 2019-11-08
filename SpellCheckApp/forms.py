@@ -58,5 +58,11 @@ class SubmissionForm(FlaskForm):
 
 
 class LoginHistory(FlaskForm):
-    userid = IntegerField('Username', id='userid', validators=[DataRequired()])
+    userid = IntegerField('UID', id='userid', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+
+class QueryHistory(FlaskForm):
+    username = StringField('Username', id='userquery', validators=[DataRequired()])
+    submit = SubmitField('Submit')
 
