@@ -12,7 +12,7 @@
 
     {% for post in posts %}
         <p>
-        <a id="query{{ req_post.get_id() }}" href={{ url_for('spell_check.query', post_id=post.id) }}>Query #{{ post.id }}</a>
+        <a id="query{{ post.get_id() }}" href={{ url_for('spell_check.query', post_id=post.id) }}>Query #{{ post.id }}</a>
     {% endfor %}
 
     </div>
