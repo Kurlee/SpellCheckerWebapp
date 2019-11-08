@@ -4,9 +4,8 @@
     <h1 class="text-center">A Spell Checker</h1>
     <h2>Hi, {{ current_user.username }}!</h2>
 
-    <p id="numqueries">
-    You have {{ current_user.total_query_num }} previous submissions
-    </p><br>
+    <p>You have </p><p id="numqueries">{{ current_user.total_query_num }}</p><p> previous submissions</p>
+    <br>
 
     <div>
 
