@@ -1,25 +1,18 @@
+{%  extends "layout.html" %}
+{% block title %}Home{% endblock %}
 {% block body %}
-<h1 class="text-center">A Spell Checker</h1>
-<h2>Hi, {{ current_user.username }}!</h2>
+    <h1 class="text-center">A Spell Checker</h1>
+    <h2>Hi, {{ current_user.username }}!</h2>
 
-<div class="col-sm-6 offset-sm-3">
-     {% if post is defined %}
-    <p>
-        <h4>Submitted Text</h4>
-        <div id="textout">
-            {{ post.body }}<br>
-        </div>
+    <div class="query">
+        <h1>This post was submitted by: </h1>
+        <p id="username">{{ post.author }}</p>
+        <h1>Query # </h1>
+        <p id="queryid">{{ post.id }}</p>
+        <h1>Query text: </h1>
+        <p id="querytext">{{ post.body }}</p>
+        <h1>Results: </h1>
+        <p id="queryresults">{{ post.results }}</p>
+    </div>
 
-        <h4>Results</h4>
-        <div id="misspelled">
-            <b>{{ post.result }}</b><br>
-        </div>
-    </p>
-
-     {% else %}
-         <p>
-         There is no content for this post, I should probably log this.
-         </p>
-    {% endif %}
-</div>
 {% endblock %}

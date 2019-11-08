@@ -107,7 +107,7 @@ def submission():
 @spell_check.route('/history', methods=['GET'])
 @login_required
 def history():
-    posts = current_user.posts.all()
+    posts = current_user.post.all()
     title = current_user.username + "'s Submission History"
     return render_template('history.html', title=title, posts=posts)
 

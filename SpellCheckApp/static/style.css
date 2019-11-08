@@ -1,3 +1,14 @@
 body{
     font-family: 'Consolas', 'Deja Vu Sans Mono', 'Bitstream Vera Sans Mono', monospace
 }
+.query h1, .query p {
+    display: inline;
+    vertical-align: top;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    line-height: 28px;
+}
+
+.query h1 {
+    font-weight: bold;
+}
