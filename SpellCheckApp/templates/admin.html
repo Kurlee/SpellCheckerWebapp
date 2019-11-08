@@ -25,36 +25,35 @@
 
 
     {% if user is defined %}
-        <p>
         <h4>User:{{ user.get_username() }}</h4>
         <h5 style="text-underline: black">Login History</h5>
-        <table>
 
-            <tr>
-                <th>User ID</th>
-                <th>Record ID</th>
-                <th>Login Time</th>
-                <th>Logout Time</th>
-            </tr>
+            <ul>
+                <li>Record ID</li>
+                <ul>
+                    <li>Login Time</li>
+                    <li>Logout Time</li>
+                </ul>
+            </ul>
 
             {% for record in user.history.all() %}
-            <tr>
-                <th>{{ record.get_uid() }}</th>
-                <th>{{ record.get_eid() }}</th>
-                <th id="login{{ record.get_eid() }}_time">
-                    {{ record.get_login_time() }}
-                </th>
-                {% if record.get_logout_time() == None %}
-                    <th id="logout{{ record.get_eid() }}_time">N/A</th>
-                {% else %}
-                    <th id="logout{{ record.get_eid() }}_time">
-                        {{ record.get_logout_time() }}
-                    </th>
+            <ul>
+                <li id="login{{ record.get_eid() }}">{{ record.get_eid() }}</li>
+                    <ul>
+                        <li id="login{{ record.get_eid() }}_time">
+                            {{ record.get_login_time() }}
+                        </li>
+                        {% if record.get_logout_time() == None %}
+                            <li id="logout{{ record.get_eid() }}_time">N/A</li>
+                        {% else %}
+                            <li id="logout{{ record.get_eid() }}_time">
+                                {{ record.get_logout_time() }}
+                            </li>
+                    </ul>
                 {% endif %}
-            </tr>
+            </ul>
             {% endfor %}
 
-        </table>
 
     {% endif %}
 
