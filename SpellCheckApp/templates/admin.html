@@ -1,16 +1,6 @@
 {%  extends "layout.html" %}
 {% block title %}Home{% endblock %}
 {% block body %}
-<h1 class="text-center">A Spell Checker</h1>
-<h2>Hi, {{ current_user.username }}!</h2>
-
-    <p>Select from the following users:</p><br>
-    <ul>
-        {% for user in users %}
-        <li>Username: {{ user.get_username() }} UID: {{ user.get_id() }}</li>
-        {% endfor %}
-    </ul>
-
     <form action="" method="post">
         {{ form.hidden_tag() }}
         <p>
@@ -25,34 +15,23 @@
 
 
     {% if user is defined %}
-        <h4>User:{{ user.get_username() }}</h4>
-        <h5 style="text-underline: black">Login History</h5>
-
-            <ul>
-                <li>Record ID</li>
+        {% for record in user.history.all() %}
+        <ul>
+            <li id="login{{ record.get_eid() }}">{{ record.get_eid() }}</li>
                 <ul>
-                    <li>Login Time</li>
-                    <li>Logout Time</li>
-                </ul>
-            </ul>
-
-            {% for record in user.history.all() %}
-            <ul>
-                <li id="login{{ record.get_eid() }}">{{ record.get_eid() }}</li>
-                    <ul>
-                        <li id="login{{ record.get_eid() }}_time">
-                            {{ record.get_login_time() }}
+                    <li id="login{{ record.get_eid() }}_time">
+                        {{ record.get_login_time() }}
+                    </li>
+                    {% if record.get_logout_time() == None %}
+                        <li id="logout{{ record.get_eid() }}_time">N/A</li>
+                    {% else %}
+                        <li id="logout{{ record.get_eid() }}_time">
+                            {{ record.get_logout_time() }}
                         </li>
-                        {% if record.get_logout_time() == None %}
-                            <li id="logout{{ record.get_eid() }}_time">N/A</li>
-                        {% else %}
-                            <li id="logout{{ record.get_eid() }}_time">
-                                {{ record.get_logout_time() }}
-                            </li>
-                        {% endif %}
-                    </ul>
-            </ul>
-            {% endfor %}
+                    {% endif %}
+                </ul>
+        </ul>
+        {% endfor %}
 
 
     {% endif %}
