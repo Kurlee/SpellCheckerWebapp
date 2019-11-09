@@ -113,7 +113,8 @@ def history():
         if form.validate_on_submit():
             requested_user = User.query.filter_by(username=form.username.data).first()
             requested_user_posts = requested_user.post.all()
-            return render_template('admin_history.html', form=form, users=users, requested=requested_user_posts)
+            return render_template('admin_history.html', form=form, users=users,
+                                   requested_user=requested_user, requested=requested_user_posts)
         return render_template('admin_history.html', form=form,  users=users)
 
     else:
