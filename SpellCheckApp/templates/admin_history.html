@@ -28,10 +28,8 @@
 
         <p id="numqueries">{{ requested_user.total_query_num }}</p>
         {% for req_post in requested %}
-            <p>
             <a id="query{{ req_post.get_id() }}" href={{ url_for('spell_check.query',
          post_id=req_post.id) }}>Query #{{ req_post.id }}</a>
-            </p>
         {% endfor %}
     </div>
 
