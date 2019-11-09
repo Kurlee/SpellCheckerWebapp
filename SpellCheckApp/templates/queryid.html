@@ -4,9 +4,9 @@
     <h1 class="text-center">A Spell Checker</h1>
     <h2>Hi, {{ current_user.username }}!</h2>
 
-    <div>
+    <div class="query">
         <h1>Query # </h1>
-        <p id="queryid">{{ post.get_id() }}</p><br>
+        <p id="{{ post.get_id() }}">{{ post.get_id() }}</p><br>
         <h1>This post was submitted by: </h1>
         <p id="username">{{ post.get_author() }}</p><br>
         <h1>Time posted: </h1>
