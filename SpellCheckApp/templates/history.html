@@ -8,46 +8,10 @@
     <br>
 
     <div>
-
     {% for post in posts %}
         <p>
         <a id="query{{ post.get_id() }}" href={{ url_for('spell_check.query', post_id=post.id) }}>Query #{{ post.id }}</a>
     {% endfor %}
-
     </div>
-    <div class="w3-container">
-    {% if admin %}
-        <div class="w3-container w3-red">
-            <h3 style="text-align: center">Admin Zone</h3>
-        </div>
-
-        <p>Select from the following users:</p><br>
-        <ul>
-            {% for user in users %}
-                <li>Username: {{ user.get_username() }} UID: {{ user.get_id() }}</li>
-            {% endfor %}
-        </ul>
-
-        <form action="" method="post">
-            {{ form.hidden_tag() }}
-            <p>
-                {{ form.username.label }}<br>
-                {{ form.username(cols=32, rows=4) }}<br>
-                {% for error in form.username.errors %}
-                    <span style="color:red;">[{{ error }}]</span>
-                {% endfor %}
-            </p>
-            <p>{{ form.submit() }}</p>
-        </form>
-
-        {% for req_post in requested %}
-            <p>
-            <a id="query{{ req_post.get_id() }}" href={{ url_for('spell_check.query',
-             post_id=req_post.id) }}>Query #{{ req_post.id }}</a>
-        {% endfor %}
-
-    {% endif %}
-    </div>
-
 
 {% endblock %}

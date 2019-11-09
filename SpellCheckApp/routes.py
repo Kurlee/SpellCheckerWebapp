@@ -107,19 +107,19 @@ def submission():
 @spell_check.route('/history', methods=['GET', 'POST'])
 @login_required
 def history():
-    posts = current_user.post.all()
-    title = current_user.username + "'s Submission History"
     if current_user.get_is_admin():
         users = User.query.all()
         form = QueryHistory()
         if form.validate_on_submit():
             requested_user = User.query.filter_by(username=form.username.data).first()
             requested_user_posts = requested_user.post.all()
-            return render_template('history.html', title=title, posts=posts, form=form,
-                                   admin=True, users=users, requested=requested_user_posts)
-        return render_template('history.html', form=form, title=title, posts=posts, admin=True, users=users)
+            return render_template('admin_history.html', form=form, users=users, requested=requested_user_posts)
+        return render_template('admin_history.html', form=form,  users=users)
 
-    return render_template('history.html', title=title, posts=posts, admin=False)
+    else:
+        posts = current_user.post.all()
+        title = current_user.username + "'s Submission History"
+        return render_template('history.html', title=title, posts=posts)
 
 
 @spell_check.route('/history/query<int:post_id>', methods=['GET'])
