@@ -125,11 +125,14 @@ def history():
 @spell_check.route('/history/query<int:post_id>', methods=['GET'])
 @login_required
 def query(post_id):
-    post = Post.query.get(post_id)
-    post_author = post.get_author()
-    if post_author == current_user.username or current_user.get_is_admin():
-        return render_template("queryid.html", post=post)
-    else:
+    try:
+        post = Post.query.get(post_id)
+        post_author = post.get_author()
+        if post_author == current_user.username or current_user.get_is_admin():
+            return render_template("queryid.html", post=post)
+        else:
+            return render_template("forbidden.html")
+    except:
         return render_template("forbidden.html")
 
 
