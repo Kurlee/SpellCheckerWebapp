@@ -13,13 +13,4 @@
             <p>{{ form.submit() }}</p>
         </form>
 
-        {% if requested_user is defined %}
-        <p id="numqueries">{{ requested_user.total_query_num }}</p>
-        {% endif %}
-        {% for req_post in requested %}
-            <a id="query{{ req_post.get_id() }}" href={{ url_for('spell_check.query',
-         post_id=req_post.id) }}>Query #{{ req_post.id }}</a><br>
-        {% endfor %}
-
-
 {% endblock %}

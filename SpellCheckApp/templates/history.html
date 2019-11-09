@@ -1,7 +1,7 @@
 {%  extends "layout.html" %}
 {% block title %}Home{% endblock %}
 {% block body %}
-    <p id="numqueries">{{ current_user.total_query_num }}</p>
+    <p id="numqueries">{{ user.total_query_num }}</p>
     {% for post in posts %}
         <a id="query{{ post.get_id() }}" href={{ url_for('spell_check.query', post_id=post.id) }}>Query #{{ post.id }}</a><br>
     {% endfor %}

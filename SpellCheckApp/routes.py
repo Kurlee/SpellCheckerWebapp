@@ -113,14 +113,13 @@ def history():
         if form.validate_on_submit():
             requested_user = User.query.filter_by(username=form.username.data).first()
             requested_user_posts = requested_user.post.all()
-            return render_template('admin_history.html', form=form, users=users,
-                                   requested_user=requested_user, requested=requested_user_posts)
+            return render_template('history.html', posts=requested_user_posts, user=requested_user)
         return render_template('admin_history.html', form=form,  users=users)
 
     else:
         posts = current_user.post.all()
         title = current_user.username + "'s Submission History"
-        return render_template('history.html', title=title, posts=posts)
+        return render_template('history.html', title=title, posts=posts, user=current_user)
 
 
 @spell_check.route('/history/query<int:post_id>', methods=['GET'])
