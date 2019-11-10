@@ -150,8 +150,3 @@ def login_history():
     else:
         return render_template('forbidden.html')
 
-
-
-@spell_check.before_request
-def before_request():
-    pass
