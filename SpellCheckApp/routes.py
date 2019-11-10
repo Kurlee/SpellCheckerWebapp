@@ -92,8 +92,3 @@ def submission():
         flash('Submission successful!')
         return render_template("submission.html", title='Submit text', form=form, post=post)
     return render_template("submission.html", title='Submit text', form=form)
-
-
-@spell_check.before_request
-def before_request():
-    pass
