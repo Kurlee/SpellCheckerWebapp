@@ -1,7 +1,6 @@
 import os
 import pytest
 from SpellCheckApp import db, create_app
-from flask import current_app
 from SpellCheckApp.models import User, Post
 from SpellCheckApp import db as _db
 from config import basedir
@@ -79,8 +78,8 @@ def session(db, request):
 
 
 @pytest.fixture(scope='module')
-def test_client():
-    flask_app = current_app('config.TestingConfig')
+def test_client(app):
+    flask_app = app
 
     testing_client = flask_app.test_client()
 

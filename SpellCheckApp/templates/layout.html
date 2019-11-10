@@ -3,20 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>A Spell Checker | {%  block title %}{% endblock %}</title>
 </head>
 <body>
-{% block body %}{%  endblock %}
+<div class="w3-bar w3-black">
+    {% if current_user.is_anonymous %}
+        <a class="w3-bar-item w3-button w3-mobile" href="{{ url_for('spell_check.login') }}" title="Login">Log In</a>
+        <a class="w3-bar-item w3-button w3-mobile" href="{{ url_for('spell_check.register') }}" title="Register">Register</a>
 
- {% with messages = get_flashed_messages(with_categories=true) %}
-   {% if messages %}
-     <ul class="flashes">
-        {% for category, message in messages %}
-         <li name={{ category }}, type='text' class="message_flash" id={{ category }}>{{ message }}</li>
-        {% endfor %}
-    </ul>
-  {% endif %}
- {% endwith %}
+    {% else %}
+        <a class="w3-bar-item w3-button w3-mobile" href="/" title="Home">Home</a>
+        <a class="w3-bar-item w3-button w3-mobile" href="{{ url_for('spell_check.submission') }}" title="Submit">Text Submission</a>
+        <a class="w3-bar-item w3-button w3-mobile" href="{{ url_for('spell_check.history') }}" title="Submit">History</a>
+        {% if current_user.get_is_admin() %}
+            <a class="w3-bar-item w3-button w3-mobile" href="{{ url_for('spell_check.login_history') }}" title="Admin">Admin Panel</a>
+        {% endif %}
+        <a class="w3-bar-item w3-button w3-mobile w3-right" href="{{ url_for('spell_check.logout') }}" title="Logout">Logout</a>
 
+    {% endif %}
+
+
+</div>
+<div class="p-2 container">
+    {% block body %}{%  endblock %}
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for category, message in messages %}
+                 <li name={{ category }}, type='text' class="message_flash" id={{ category }}>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+</div>
 
 </body>
 </html>
