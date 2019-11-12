@@ -150,5 +150,3 @@ def login_history():
         return render_template('admin.html', title="Admin Panel", form=form, users=users)
     else:
         return render_template('forbidden.html')
-
-=======
