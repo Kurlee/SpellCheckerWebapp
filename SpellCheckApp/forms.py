@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, validators, SubmitField
+from wtforms import StringField, PasswordField, validators, SubmitField, IntegerField
 from wtforms.validators import DataRequired, ValidationError, Email
 from SpellCheckApp.models import User
 
@@ -55,5 +55,20 @@ class RegistrationForm(FlaskForm):
 class SubmissionForm(FlaskForm):
     inputtext = StringField('CheckText', id='inputtext', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+
+class LoginHistory(FlaskForm):
+    userid = IntegerField('UID', id='userid', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+
+class QueryHistory(FlaskForm):
+    username = StringField('Username', id='userquery', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user is None:
+            raise ValidationError('Failure: Username does not match any existing user')
 
 

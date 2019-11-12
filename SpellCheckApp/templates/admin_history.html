@@ -1,0 +1,16 @@
+{%  extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block body %}
+        <form action="" method="post">
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.username.label }}<br>
+                {{ form.username(cols=32, rows=4) }}<br>
+                {% for error in form.username.errors %}
+                    <span style="color:red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>{{ form.submit() }}</p>
+        </form>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+{%  extends "layout.html" %}
+{% block title %}Home{% endblock %}
+{% block body %}
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.userid.label }}<br>
+            {{ form.userid(cols=32, rows=4) }}<br>
+            {% for error in form.userid.errors %}
+                <span style="color:red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+
+    {% if user is defined %}
+        {% for record in user.history.all() %}
+        <ul>
+            <li id="login{{ record.get_eid() }}">{{ record.get_eid() }}</li>
+                <ul>
+                    <li id="login{{ record.get_eid() }}_time">
+                        {{ record.get_login_time() }}
+                    </li>
+                    {% if record.get_logout_time() == None %}
+                        <li id="logout{{ record.get_eid() }}_time">N/A</li>
+                    {% else %}
+                        <li id="logout{{ record.get_eid() }}_time">
+                            {{ record.get_logout_time() }}
+                        </li>
+                    {% endif %}
+                </ul>
+        </ul>
+        {% endfor %}
+
+
+    {% endif %}
+
+{% endblock %}
