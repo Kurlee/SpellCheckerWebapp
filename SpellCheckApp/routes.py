@@ -104,6 +104,7 @@ def submission():
     return render_template("submission.html", title='Submit text', form=form)
 
 
+
 @spell_check.route('/history', methods=['GET', 'POST'])
 @login_required
 def history():
@@ -150,3 +151,4 @@ def login_history():
     else:
         return render_template('forbidden.html')
 
+=======
