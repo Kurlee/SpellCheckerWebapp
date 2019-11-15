@@ -3,7 +3,7 @@
 mkdir -p /code/logs
 touch /code/logs/gunicorn.log
 touch /code/logs/gunicorn-access.log
-tail -n 0 -f /code/logs/gunicorn*.log &
+tail -n 0 -f /code/logs/gunicorn*.log
 
 
 exec gunicorn "SpellCheckApp:create_app()" \
