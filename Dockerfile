@@ -13,7 +13,8 @@ RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 8080
-CMD ["sh", "entrypoint.sh"]
+CMD [ 'gunicorn', 'SpellCheckApp:this_app', '--bind', '0.0.0.0:8080', '--workers', '5' ]
+
 
 # Commands for testing and building:
 # docker build -t spelling-docker:latest .

@@ -36,3 +36,4 @@ def create_app(config_filename = 'config.ProductionConfig'):
     return app
 
 
+this_app = create_app()
