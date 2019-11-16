@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.com/Kurlee/SpellCheckerWebapp.svg?branch=master)](https://travis-ci.com/Kurlee/SpellCheckerWebapp)
+[![Build Status](https://img.shields.io/docker/automated/kurlee/spellcheckwebapp)](https://hub.docker.com/repository/docker/kurlee/spellcheckwebapp)
 
 # Spell checking web application
 
@@ -14,3 +15,7 @@ testing and vulnarability identification.
 - Working on building a test suite with high coverage.
 - Conduct thorough penetration testing of the application
 - Focus on the look of the application only after functionality has been tested and verified secure.
+
+
+#### Docker
+- Repo at https://hub.docker.com/repository/docker/kurlee/spellcheckwebapp
