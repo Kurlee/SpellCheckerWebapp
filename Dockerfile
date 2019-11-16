@@ -16,6 +16,3 @@ EXPOSE 8080
 CMD [ "gunicorn", "SpellCheckApp:this_app", "--bind", "0.0.0.0:8080", "--workers", "5" ]
 
 
-# Commands for testing and building:
-# docker build -t spelling-docker:latest .
-# docker run -d -p 8080:8080 spelling-docker
