@@ -12,5 +12,14 @@ body{
 .query h1 {
     font-weight: bold;
 }
+.hist table {
+  border-collapse: collapse;
+  width: 400px;
+}
 
+.hist th, .hist td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
 
