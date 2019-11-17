@@ -1,0 +1,7 @@
+version:  "3.7"
+services:
+  flask-application:
+    image: kurlee/spellcheckwebapp
+    ports:
+      - "8080:80"
+
