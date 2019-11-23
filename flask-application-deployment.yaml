@@ -3,8 +3,7 @@ kind: Deployment
 metadata:
   name: flask-application
 spec:
-  replicas: 2
-  strategy: {}
+  replicas: 5
   selector:
     matchLabels:
       run: flask-application
@@ -18,4 +17,14 @@ spec:
         image: kurlee/spellcheckwebapp
         ports:
         - containerPort: 8080
+        resources:
+          limits:
+            cpu: "1"
+            memory: "200Mi"
+          requests:
+            cpu: "0.5"
+            memory: "100Mi"
+        args:
+          - -cpus
+          - "2"
       restartPolicy: Always
